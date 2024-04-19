@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "biomejs.biome",
+    "Prisma.prisma",
+    "EditorConfig.EditorConfig",
+    "formulahendry.auto-close-tag",
+    "formulahendry.auto-complete-tag",
+    "formulahendry.auto-rename-tag",
+    "mosapride.zenkaku",
+    "ms-azuretools.vscode-docker",
+    "oderwat.indent-rainbow",
+    "wayou.vscode-todo-highlight",
+    "yzhang.markdown-all-in-one"
+  ]
+}
