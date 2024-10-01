@@ -67,7 +67,7 @@ export default function Home() {
           disabled={!selectedNFT || !toAddress || !NFTContractAddress}
         />
       </Stack>
-      <SimpleGrid mt={40} cols={{ xs: 2, md: 6 }}>
+      <SimpleGrid mt={40} cols={{ sm: 2, md: 6 }}>
         {currentNFTs.map((nft) => (
           <Paper bg={nft.tokenId === selectedNFT?.tokenId ? "teal.4" : "gray.3"} radius="sm" key={nft.tokenId} onClick={() => setSelectedNFT(nft)}>
             <Image src={nft.image.cachedUrl} alt={nft.name} fit="cover" radius="sm" />
