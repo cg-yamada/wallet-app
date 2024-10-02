@@ -23,6 +23,7 @@ export default function Home() {
   const { writeContract } = useWriteContract()
   const eip712 = useSignTypedData()
   const [NFTContractAddress, setNFTContractAddress] = useState<Address>()
+  const [eip712Signature, setEip712Signature] = useState<Address>()
   const [toAddress, setToAddress] = useState<Address>()
   const [currentNFTs, setCurrentNFTs] = useState<OwnedNft[]>([])
   const [selectedNFT, setSelectedNFT] = useState<OwnedNft>()
@@ -71,12 +72,14 @@ export default function Home() {
         contents: "Hello, Bob!",
       },
     })
-    console.log({ signature })
+    setEip712Signature(signature)
   }
 
   return (
     <Container my={40}>
       <w3m-button />
+      <Button mt={8} onClick={handleSign} children="署名する" fullWidth />
+      <Text mt={8} children={`署名結果）${eip712Signature ? `${eip712Signature?.slice(0, 10)}......${eip712Signature?.slice(-10)}` : ""}`} />
       <Stack mt={20} gap={32}>
         <TextInput
           label="contractAddress"
@@ -90,7 +93,6 @@ export default function Home() {
           children={selectedNFT ? `TokenId=${selectedNFT.tokenId} を転送する` : "譲渡するNFTを選択してください"}
           disabled={!selectedNFT || !toAddress || !NFTContractAddress}
         />
-        <Button onClick={handleSign} children="署名する" />
       </Stack>
       <SimpleGrid mt={40} cols={2}>
         {currentNFTs.map((nft) => (
