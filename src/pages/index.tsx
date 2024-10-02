@@ -5,7 +5,7 @@ import { Alchemy, Network, type OwnedNft } from "alchemy-sdk"
 import { useEffect, useState } from "react"
 import { type Address, erc721Abi } from "viem"
 import { polygon } from "viem/chains"
-import { useAccount, useChainId, useWriteContract } from "wagmi"
+import { useAccount, useChainId, useSignTypedData, useWriteContract } from "wagmi"
 
 /** ウォレットアドレスに紐づくNFTを取得 */
 async function getNFTs(chainId: number, walletAddress: Address): Promise<OwnedNft[]> {
@@ -21,6 +21,7 @@ export default function Home() {
   const chainId = useChainId()
   const account = useAccount()
   const { writeContract } = useWriteContract()
+  const eip712 = useSignTypedData()
   const [NFTContractAddress, setNFTContractAddress] = useState<Address>()
   const [toAddress, setToAddress] = useState<Address>()
   const [currentNFTs, setCurrentNFTs] = useState<OwnedNft[]>([])
@@ -50,6 +51,29 @@ export default function Home() {
     })
   }
 
+  async function handleSign() {
+    const signature = await eip712.signTypedDataAsync({
+      primaryType: "Mail",
+      types: {
+        Person: [
+          { name: "name", type: "string" },
+          { name: "wallet", type: "address" },
+        ],
+        Mail: [
+          { name: "from", type: "Person" },
+          { name: "to", type: "Person" },
+          { name: "contents", type: "string" },
+        ],
+      },
+      message: {
+        from: { name: "Cow", wallet: "0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826" },
+        to: { name: "Bob", wallet: "0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB" },
+        contents: "Hello, Bob!",
+      },
+    })
+    console.log({ signature })
+  }
+
   return (
     <Container my={40}>
       <w3m-button />
@@ -66,6 +90,7 @@ export default function Home() {
           children={selectedNFT ? `TokenId=${selectedNFT.tokenId} を転送する` : "譲渡するNFTを選択してください"}
           disabled={!selectedNFT || !toAddress || !NFTContractAddress}
         />
+        <Button onClick={handleSign} children="署名する" />
       </Stack>
       <SimpleGrid mt={40} cols={2}>
         {currentNFTs.map((nft) => (
